@@ -218,7 +218,7 @@ in {
 
   environment.systemPackages = [ pkgs.libcec ];
 
-  networking.hostName = "odroid"; # Define your hostname.
+  networking.hostName = "artmedia"; # Define your hostname.
 
   networking.useDHCP = false;
   networking.interfaces.eth0.useDHCP = true;
@@ -251,11 +251,21 @@ in {
     defaults.pcm.rate_converter "speexrate"
   '';
 
+  # Select internationalisation properties.
+  i18n.defaultLocale = "fr_FR.UTF-8";
+  console = {
+    font = "Lat2-Terminus16";
+    keyMap = lib.mkForce "fr";
+    useXkbConfig = true; # use xkb.options in tty.
+  };
+
   # Define a user account. Don't forget to set a password with ‘passwd’.
-  users.users.dan = {
+  users.users.nixos = {
     isNormalUser = true;
+    initialPassword = "pass";
     extraGroups = [ "weston-launch" "wheel" "video" "audio"]; # Enable ‘sudo’ for the user.
   };
+  security.sudo.wheelNeedsPassword = false;
 
   users.users.kodi = {
     isNormalUser = true;
@@ -264,13 +274,13 @@ in {
 
   users.users.root.openssh.authorizedKeys.keyFiles = [
     "${builtins.getEnv "HOME"}/.ssh/authorized_keys"
-    "${builtins.getEnv "HOME"}/.ssh/id_rsa.pub"
+    "${builtins.getEnv "HOME"}/.ssh/id_ed25519.pub"
   ];
 
   # Enable the OpenSSH daemon.
   services.openssh.enable = true;
 
-  system.stateVersion = "21.05"; # Did you read the comment?
+  system.stateVersion = "25.05"; # Did you read the comment?
 
   hardware.opengl = { enable = true; driSupport = true; };
 
