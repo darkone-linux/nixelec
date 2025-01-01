@@ -121,7 +121,8 @@ in {
                  vdpauSupport = false;
                  gbmSupport = true;
 
-                 jre_headless = self.buildPackages.adoptopenjdk-openj9-bin-11 ;
+                 #jre_headless = self.buildPackages.adoptopenjdk-openj9-bin-11;
+                 jre_headless = self.buildPackages.semeru-bin-11;
                  lirc = null;
                };
 
@@ -146,19 +147,19 @@ in {
         };
       });
 
-      mesa =
-        (super.mesa.overrideAttrs (o:{
-          mesonFlags =
-            let moreCross = self.writeText "cross-exe-wrapper.conf" ''
-            [binaries]
-            llvm-config = '${self.llvmPackages_11.llvm.dev}/bin/llvm-config'
-            cmake = '${self.buildPackages.cmake}/bin/cmake'
-            exe_wrapper = '/nix/store/4s5s0bgp6708nnyl9zbc7fa6s8c5xh59-qemu-6.0.0/bin/qemu-aarch64'
-        ''; in
-              ["-Dgallium-drivers=[lima,panfrost]"
-               "--cross-file=${moreCross}"
-              ] ++ o.mesonFlags;
-        }));
+#      mesa =
+#        (super.mesa.overrideAttrs (o:{
+#          mesonFlags =
+#            let moreCross = self.writeText "cross-exe-wrapper.conf" ''
+#            [binaries]
+#            llvm-config = '${self.llvmPackages_11.llvm.dev}/bin/llvm-config'
+#            cmake = '${self.buildPackages.cmake}/bin/cmake'
+#            exe_wrapper = '/nix/store/4s5s0bgp6708nnyl9zbc7fa6s8c5xh59-qemu-6.0.0/bin/qemu-aarch64'
+#        ''; in
+#              ["-Dgallium-drivers=[lima,panfrost]"
+#               "--cross-file=${moreCross}"
+#              ] ++ o.mesonFlags;
+#        }));
 
       pango = null;
 
@@ -236,20 +237,19 @@ in {
   };
 
   # Enable sound.
-  sound.enable = true;
-  sound.extraConfig = ''
-    pcm.kodi {
-        type plug
-        slave {
-            pcm "hw:0"
-            rate 44100
-            format S16_LE
-        }
-    }
-    defaults.namehint.showall on
-    defaults.namehint.extended on
-    defaults.pcm.rate_converter "speexrate"
-  '';
+  #sound.extraConfig = ''
+  #  pcm.kodi {
+  #      type plug
+  #      slave {
+  #          pcm "hw:0"
+  #          rate 44100
+  #          format S16_LE
+  #      }
+  #  }
+  #  defaults.namehint.showall on
+  #  defaults.namehint.extended on
+  #  defaults.pcm.rate_converter "speexrate"
+  #'';
 
   # Select internationalisation properties.
   i18n.defaultLocale = "fr_FR.UTF-8";
@@ -282,7 +282,7 @@ in {
 
   system.stateVersion = "25.05"; # Did you read the comment?
 
-  hardware.opengl = { enable = true; driSupport = true; };
+  hardware.opengl.enable = true;
 
   networking.firewall = {
     # for the Kodi web interface
